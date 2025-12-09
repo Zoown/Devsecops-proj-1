@@ -1,0 +1,23 @@
+/* Custom styles for active link */
+.nav-item .nav-link.active {
+    color: #007bff; /* Change the color to your preferred color */
+    font-weight: bold; /* Make the font bold */
+    text-decoration: underline; /* Underline the text */
+  }
+  
+/* Add your hover styles for the link */ 
+a:hover, a:hover:focus { color: red; text-decoration: underline; }
+.my-link { color: blue; text-decoration: none; } 
+.my-link:hover { color: blue; /* Increased specificity */ text-decoration: underline; }
+
+.card { margin: 10px; /* Add spacing between the cards */ }
+.card-img-top.fixed-size { width: 160px; height: 160px; object-fit: cover; object-fit: contain; /* Ensure the full image is visible */ }
+.card-link { text-decoration: none; color: inherit; }
+
+/* FilterBar.css */ 
+.filter-bar { display: flex; align-items: center; margin-bottom: 10px; }
+.filter-bar span { margin-right: 10px; font-weight: bold; } .filter-bar label { margin-right: 15px; }
+
+p, h1, li {
+    caret-color: transparent !important;
+}
