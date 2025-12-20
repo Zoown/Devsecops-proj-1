@@ -54,7 +54,7 @@ describe("DeleteApartment with button click", () => {
     expect(onApartmentDeleted).not.toHaveBeenCalled();
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      "Error deleting apartment:",
+      "Network error:",
       expect.any(Error)
     );
 
