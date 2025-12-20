@@ -26,6 +26,8 @@ function TestComponent() {
   );
 }
 
+console.log("Starting test: setApartments");
+
 describe("setApartments state update", () => {
   it("updates state with new apartments", () => {
     render(<TestComponent />);

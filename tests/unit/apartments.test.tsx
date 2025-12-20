@@ -56,6 +56,8 @@ import { MemoryRouter } from "react-router-dom";
 import App from "../../src/App";
 import { describe, expect, it, vi } from "vitest";
 
+console.log("Starting test: apartments");
+
 global.fetch = vi.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve(mockApartments),

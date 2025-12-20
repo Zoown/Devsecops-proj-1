@@ -3,6 +3,8 @@ import { describe, it, expect, vi } from "vitest";
 import axios from "axios";
 import DeleteApartment from "../../src/DeleteApartment";
 
+console.log("Starting test: deleteApartments");
+
 vi.mock("axios");
 const mockedAxios = axios as unknown as {
   delete: ReturnType<typeof vi.fn>;

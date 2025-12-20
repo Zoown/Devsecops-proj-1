@@ -19,6 +19,8 @@ function filterApartments( apartments: Apartment[], streetFilters: Record<string
   );
 }
 
+console.log("Starting test: filterApartments");
+
 describe("Apartment filtering", () => {
   it("filters by street and city", () => {
     const result = filterApartments(apartments, streetFilters, cityFilters);
