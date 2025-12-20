@@ -2,6 +2,8 @@
 
 # Test workflow
 
+# Test workflow 2
+
 How to launch(I Should write script that does all this in one command):
 
 1. Go to root folder of project.
