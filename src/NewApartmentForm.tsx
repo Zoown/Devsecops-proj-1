@@ -55,20 +55,40 @@ const NewApartmentForm: React.FC<NewApartmentFormProps> = ({ onApartmentAdded })
       //  headers: { "Content-Type": "application/json" } // Explicitly set headers
       //});
 
-      onApartmentAdded(response.data); // Update the frontend dynamically
+      if (response.status === 201) {
+        onApartmentAdded(response.data); // Update the frontend dynamically
 
-      // Reset the form
-      setFormData({
-        street: "",
-        address: "",
-        apartment_number: 0,
-        size_sq_m: 0,
-        rent_cost: 0,
-        city: "",
-      });
+        // Reset the form
+        setFormData({
+          street: "",
+          address: "",
+          apartment_number: 0,
+          size_sq_m: 0,
+          rent_cost: 0,
+          city: "",
+        });
+      } else {
+        console.error("Unexpected status code:", response.status);
+      }
 
-    } catch (error) {
-      console.error("Error adding apartment:", error);
+    } catch (error: any) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 400:
+            console.error("Invalid input data. Please check the form fields.");
+            break;
+          case 409:
+            console.error("Apartment already exists. Duplicate entry.");
+            break;
+          case 500:
+            console.error("Server error. Please try again later.");
+            break;
+          default:
+            console.error("Unexpected error:", error.response.status);
+        }
+      } else {
+        console.error("Network error. Could not reach server:", error);
+      }
     }
   };
 

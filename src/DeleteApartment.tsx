@@ -14,8 +14,25 @@ const DeleteApartment: React.FC<DeleteApartmentProps> = ({ apartmentId, apartmen
       //await axios.delete(`/api/apartments?id=${apartmentId}`);
       await axios.delete(`/api/apartments/${apartmentId}`);
       onApartmentDeleted(apartmentId); // Remove from UI after successful deletion
-    } catch (error) {
-      console.error("Error deleting apartment:", error);
+    } catch (error: any) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            console.error("Apartment not found");
+            break;
+          case 400:
+            console.error("Invalid apartment ID");
+            break;
+          case 401:
+          case 403:
+            console.error("Not authorized to delete this apartment");
+            break;
+          default:
+            console.error("Server error:", error);
+        }
+      } else {
+        console.error("Network error:", error);
+      }
     }
   };
 

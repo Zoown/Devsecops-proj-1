@@ -45,6 +45,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NewApartmentForm from "./NewApartmentForm";
 import DeleteApartment from "./DeleteApartment";
+import UpdateApartmentForm from "./UpdateApartmentForm";
 
 //Auth
 import { Navigate } from "react-router-dom";
@@ -58,7 +59,7 @@ function handleSelectCity(item: string) {
 type StreetFilter = "Street 1" | "Street 2" | "Street 3";
 type CityFilter = "City A" | "City B" | "City C" | "City D";
 
-interface Apartment {
+export interface Apartment {
   id?: number;
   street: string;
   address: string;
@@ -93,6 +94,7 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
 function App() {
 
   const [apartments, setApartments] = useState<Apartment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   //useEffect(() => {
   //  axios.get("http://localhost:5000/apartments")  // Backend API URL
@@ -280,8 +282,25 @@ function App() {
               {
                 <ProtectedRoute element={
                   <div>Admin Page
-                  <NewApartmentForm onApartmentAdded={handleApartmentAdded} />
+                  
+                  {/* Update existing apartment */}
+                  {
+                    apartments.length > 0 ? (
+                    <UpdateApartmentForm
+                      apartmentId={apartments[0].id ?? 0} // Example: update the first apartment
+                      initialData={apartments[0]}        // Pre-fill with its current data
+                      onApartmentUpdated={(updated) => {
+                        setApartments(apartments.map(a =>
+                          a.id === updated.id ? updated : a
+                        ));
+                      }}
+                    />
+                    ) : (
+                      <p>No apartments available to update.</p>
+                    )
+                  }
 
+                  <NewApartmentForm onApartmentAdded={handleApartmentAdded} />
                   {/* List of Apartments with Delete Option */}
                   {
                     apartments.map((apt) => (
@@ -307,7 +326,4 @@ function App() {
 }
 
 export default App;
-function setLoading(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
 
