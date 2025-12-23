@@ -10,6 +10,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -22,8 +28,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Start API server
-        run: npm start &
+      - name: Start backend
+        run: cd api && node server.js &
 
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:5000
