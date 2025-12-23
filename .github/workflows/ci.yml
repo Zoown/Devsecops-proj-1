@@ -22,6 +22,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Start API server
+        run: npm start &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:5000
+
       # --- UNIT TESTS ---
       - name: Run Unit Tests
         run: npm run test:unit
