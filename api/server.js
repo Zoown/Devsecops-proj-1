@@ -48,6 +48,24 @@ app.get("/apartments", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.get("/apartments/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log(`Received GET request for apartment ID: ${id}`); // Debugging
+
+  try {
+    const result = await pool.query("SELECT * FROM apartments WHERE id = $1", [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Apartment not found" });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error("Error fetching apartment:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
   
 app.post("/apartments", async (req, res) => {
     const { street, address, apartment_number, size_sq_m, rent_cost, city } = req.body;

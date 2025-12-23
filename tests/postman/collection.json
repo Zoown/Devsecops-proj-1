@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "580dd062-386f-4021-abfb-05bdd1fd3c40",
+		"name": "Apartments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51016416",
+		"_collection_link": "https://zown2000-3594764.postman.co/workspace/7ad4b438-c88e-483c-8b19-431cd07ff275/collection/51016416-580dd062-386f-4021-abfb-05bdd1fd3c40?action=share&source=collection_link&creator=51016416"
+	},
+	"item": [
+		{
+			"name": "Get all apartments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/apartments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"apartments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new apartment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();\r",
+							"pm.collectionVariables.set(\"apartmentId\", json.id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"street\": \"Postman Street 1\",\r\n    \"address\": \"Postman Adress 1\",\r\n    \"apartment_number\": \"1919\",\r\n    \"size_sq_m\": \"2020\",\r\n    \"rent_cost\": \"5555\",\r\n    \"city\": \"Postman City\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/apartments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"apartments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get the newly created apartment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/apartments/{{apartmentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"apartments",
+						"{{apartmentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit the newly created apartment",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"street\": \"Postman Street Edited 1\",\r\n    \"address\": \"Postman Adress Edited 1\",\r\n    \"apartment_number\": \"1919\",\r\n    \"size_sq_m\": \"2020\",\r\n    \"rent_cost\": \"5555\",\r\n    \"city\": \"Postman City Edited\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/apartments/{{apartmentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"apartments",
+						"{{apartmentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the newly created apartment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/apartments/{{apartmentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"apartments",
+						"{{apartmentId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "apartmentId",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
