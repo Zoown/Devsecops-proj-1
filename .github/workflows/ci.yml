@@ -32,7 +32,7 @@ jobs:
         run: cd api && node server.js &
 
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:5000
+        run: npx wait-on http://127.0.0.1:5000
 
       # --- UNIT TESTS ---
       - name: Run Unit Tests
