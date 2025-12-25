@@ -35,7 +35,7 @@ jobs:
         run: npx wait-on http://127.0.0.1:5000
 
       - name: Start frontend
-        run: npm run dev -- --host 0.0.0.0 &
+        run: npm run dev -- -- --host 0.0.0.0 &
 
       - name: Wait for frontend
         run: npx wait-on http://127.0.0.1:5173
