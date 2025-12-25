@@ -37,11 +37,11 @@ jobs:
       - name: Start frontend
         #run: npm run dev -- -- --host 0.0.0.0 &
         run: |
-          nohup npm run dev -- -- --host 0.0.0.0 > frontend.log 2>&1 &
+          nohup npm run dev > frontend.log 2>&1 &
           disown
 
       - name: Wait for frontend
-        run: npx wait-on http://127.0.0.1:5173/__vite_ping
+        run: npx wait-on http://127.0.0.1:5173
 
       # --- UNIT TESTS ---
       - name: Run Unit Tests
