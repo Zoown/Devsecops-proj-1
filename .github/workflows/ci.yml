@@ -45,6 +45,8 @@ jobs:
       - name: Start frontend and wait
         run: |
           nohup npm run dev > frontend.log 2>&1 &
+          sleep 2
+          tail -n 20 frontend.log
           npx wait-on http://127.0.0.1:5173/about
 
       - name: Show frontend log if wait-on fails
