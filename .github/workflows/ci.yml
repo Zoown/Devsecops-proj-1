@@ -45,7 +45,13 @@ jobs:
       - name: Start frontend and wait
         run: |
           nohup npm run dev > frontend.log 2>&1 &
-          npx wait-on http://127.0.0.1:5173/
+          npx wait-on http://127.0.0.1:5173/about
+
+      - name: Show frontend log if wait-on fails
+        if: failure()
+        run: |
+          echo "===== frontend.log ====="
+          cat frontend.log || echo "No frontend.log found"
 
       # --- UNIT TESTS ---
       - name: Run Unit Tests
