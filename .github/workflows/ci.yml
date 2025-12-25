@@ -46,6 +46,8 @@ jobs:
         run: |
           npm run dev &
           sleep 2
+          curl -i http://127.0.0.1:5173/about || echo "curl failed"
+          sleep 2
           npx wait-on http://127.0.0.1:5173/about
 
       - name: Show frontend log if wait-on fails
