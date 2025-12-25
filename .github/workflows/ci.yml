@@ -41,7 +41,7 @@ jobs:
           disown
 
       - name: Wait for frontend
-        run: npx wait-on http://127.0.0.1:5173
+        run: npx wait-on http://127.0.0.1:5173/__vite_ping
 
       # --- UNIT TESTS ---
       - name: Run Unit Tests
