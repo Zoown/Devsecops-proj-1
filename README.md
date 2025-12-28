@@ -1,9 +1,5 @@
 # Devsecops-proj-1
 
-# Test workflow
-
-# Test workflow 2
-
 1. Go to root folder of project.
 2. Run command: "npm start"
 3. Admin login account: a / a
