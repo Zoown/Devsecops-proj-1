@@ -59,8 +59,8 @@ const UpdateApartmentForm: React.FC<UpdateApartmentFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
+    <form onSubmit={handleSubmit} data-testid="update-apartment-form">
+      <input data-testid="new-street"
         type="text"
         name="street"
         placeholder="Street"
@@ -68,7 +68,7 @@ const UpdateApartmentForm: React.FC<UpdateApartmentFormProps> = ({
         value={formData.street}
         required
       />
-      <input
+      <input data-testid="new-address"
         type="text"
         name="address"
         placeholder="Address"
@@ -76,7 +76,7 @@ const UpdateApartmentForm: React.FC<UpdateApartmentFormProps> = ({
         value={formData.address}
         required
       />
-      <input
+      <input data-testid="new-number"
         type="number"
         name="apartment_number"
         placeholder="Apartment Number"
@@ -84,7 +84,7 @@ const UpdateApartmentForm: React.FC<UpdateApartmentFormProps> = ({
         value={formData.apartment_number}
         required
       />
-      <input
+      <input data-testid="new-size"
         type="number"
         name="size_sq_m"
         placeholder="Size (sq.m)"
@@ -92,7 +92,7 @@ const UpdateApartmentForm: React.FC<UpdateApartmentFormProps> = ({
         value={formData.size_sq_m}
         required
       />
-      <input
+      <input data-testid="new-rent"
         type="number"
         name="rent_cost"
         placeholder="Rent Cost"
@@ -100,7 +100,7 @@ const UpdateApartmentForm: React.FC<UpdateApartmentFormProps> = ({
         value={formData.rent_cost}
         required
       />
-      <input
+      <input data-testid="new-city"
         type="text"
         name="city"
         placeholder="City"

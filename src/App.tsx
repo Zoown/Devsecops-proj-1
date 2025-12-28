@@ -46,10 +46,12 @@ import axios from "axios";
 import NewApartmentForm from "./NewApartmentForm";
 import DeleteApartment from "./DeleteApartment";
 import UpdateApartmentForm from "./UpdateApartmentForm";
+import { Apartment } from "./Apartment";
 
 //Auth
 import { Navigate } from "react-router-dom";
 import Login from "./login";
+import ApartmentCard from "./ApartmentCard";
 
 
 function handleSelectCity(item: string) {
@@ -58,16 +60,6 @@ function handleSelectCity(item: string) {
 
 type StreetFilter = "Street 1" | "Street 2" | "Street 3";
 type CityFilter = "City A" | "City B" | "City C" | "City D";
-
-export interface Apartment {
-  id?: number;
-  street: string;
-  address: string;
-  apartment_number: number;
-  size_sq_m: number;
-  rent_cost: number;
-  city: string;
-}
 
 // Token lasts forever does not check expiraton time
 //const isAuthenticated = () => {
@@ -158,6 +150,9 @@ function App() {
       (cityFilters[apartment.city as CityFilter] ||
         !Object.values(cityFilters).some(Boolean))
   );
+
+  //OTHERS
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   return (
     <div>
@@ -284,28 +279,20 @@ function App() {
                   <div>Admin Page
                   
                   {/* Update existing apartment */}
-                  {
-                    apartments.length > 0 ? (
-                    <UpdateApartmentForm
-                      apartmentId={apartments[0].id ?? 0} // Example: update the first apartment
-                      initialData={apartments[0]}        // Pre-fill with its current data
-                      onApartmentUpdated={(updated) => {
-                        setApartments(apartments.map(a =>
-                          a.id === updated.id ? updated : a
-                        ));
-                      }}
-                    />
-                    ) : (
-                      <p>No apartments available to update.</p>
-                    )
-                  }
+                  {apartments.length === 0 && (
+                    <p>No apartments available to update.</p>
+                  )}
 
                   <NewApartmentForm onApartmentAdded={handleApartmentAdded} />
                   {/* List of Apartments with Delete Option */}
                   {
                     apartments.map((apt) => (
                       <div key={apt.id} className="apartment-card">
-                        <DeleteApartment apartmentId={apt.id ?? 0} apartmentNumber={apt.apartment_number} onApartmentDeleted={handleApartmentDeleted} />
+                        <ApartmentCard
+                          apt={apt}
+                          onApartmentDeleted={handleApartmentDeleted}
+                          onApartmentUpdated={handleApartmentAdded}
+                        />
                       </div>
                     ))
                   }
