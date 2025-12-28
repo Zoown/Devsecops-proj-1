@@ -21,7 +21,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           echo "Skipping tests on main for initial setup"
-          exit 0
+          exit 78
 
       - name: Checkout repo
         uses: actions/checkout@v3
