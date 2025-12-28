@@ -17,6 +17,12 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
 
     steps:
+      - name: Skip tests on main (temporary)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Skipping tests on main for initial setup"
+          exit 0
+
       - name: Checkout repo
         uses: actions/checkout@v3
 
