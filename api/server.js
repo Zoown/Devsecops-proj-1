@@ -35,9 +35,11 @@ pool.query("SELECT NOW()", (err, res) => {
 });
 
 // Start Express server
-app.listen(5000, () => {
+app.listen(5000, "0.0.0.0", () => {
   console.log("Server running on port 5000");
 });
+
+app.get('/', (req, res) => { res.status(200).send('OK'); });
 
 
 app.get("/apartments", async (req, res) => {
@@ -48,20 +50,49 @@ app.get("/apartments", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.get("/apartments/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log(`Received GET request for apartment ID: ${id}`); // Debugging
+
+  try {
+    const result = await pool.query("SELECT * FROM apartments WHERE id = $1", [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Apartment not found" });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error("Error fetching apartment:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
   
 app.post("/apartments", async (req, res) => {
     const { street, address, apartment_number, size_sq_m, rent_cost, city } = req.body;
     console.log("Received POST request to /apartments"); // Debugging
     console.log("Incoming request body:", req.body); // Debugging
 
+    if (!street || !address || !apartment_number || !size_sq_m || !rent_cost || !city) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
     try {
       const result = await pool.query(
-        "INSERT INTO apartments (street, address, apartment_number, size_sq_m, rent_cost, city) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        `INSERT INTO apartments (street, address, apartment_number, size_sq_m, rent_cost, city) 
+         VALUES ($1, $2, $3, $4, $5, $6) 
+         RETURNING *`,
         [street, address, apartment_number, size_sq_m, rent_cost, city]
       );
       res.status(201).json(result.rows[0]); // Send back the newly created apartment
     } catch (err) {
       console.error("Error adding apartment:", err);
+
+      if (err.code === "23505") { // Postgres unique violation
+        return res.status(409).json({ error: "Apartment already exists" });
+      }
+
       res.status(500).json({ error: err.message });
     }
 });
@@ -82,6 +113,41 @@ app.delete("/apartments/:id", async (req, res) => {
   } catch (err) {
       console.error("Error deleting apartment:", err);
       res.status(500).json({ error: err.message });
+  }
+});
+
+app.put("/apartments/:id", async (req, res) => {
+  const { id } = req.params;
+  const { street, address, apartment_number, size_sq_m, rent_cost, city } = req.body;
+
+  if (!street || !address || !apartment_number || !size_sq_m || !rent_cost || !city) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE apartments 
+       SET street = $1, address = $2, apartment_number = $3, size_sq_m = $4, rent_cost = $5, city = $6
+       WHERE id = $7
+       RETURNING *`,
+      [street, address, apartment_number, size_sq_m, rent_cost, city, id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Apartment not found" });
+    }
+
+    // Success
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error("Error updating apartment:", err);
+
+    // Handle unique constraint violation (e.g. duplicate apartment_number)
+    if (err.code === "23505") {
+      return res.status(409).json({ error: "Apartment already exists" });
+    }
+
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -117,7 +183,7 @@ app.post("/login", (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, "your-secret-key", { expiresIn: "30m" });
+    const token = jwt.sign({ id: user.id, role: user.role }, "your-secret-key", { expiresIn: "1m" });
 
     res.json({ token });
   });

@@ -11,6 +11,12 @@ jobs:
     name: CI Tests
     runs-on: ubuntu-latest
 
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -20,5 +26,48 @@ jobs:
         with:
           node-version: 20
 
-      - name: Placeholder step
-        run: echo "CI workflow placeholder — no tests yet"
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start backend
+        run: cd api && node server.js &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://127.0.0.1:5000
+
+      - name: Start frontend and wait
+        run: |
+          npm run dev > frontend.log 2>&1 &
+          echo "Waiting for frontend to be reachable..."
+          for i in {1..10}; do
+            if curl -s --head http://127.0.0.1:5173/about | grep "200 OK" > /dev/null; then
+              echo "Frontend is up!"
+              break
+            fi
+            echo "Still waiting... ($i)"
+            sleep 3
+          done
+
+      - name: Show frontend log if wait-on fails
+        if: failure()
+        run: |
+          echo "===== frontend.log ====="
+          cat frontend.log || echo "No frontend.log found"
+
+      # --- UNIT TESTS ---
+      - name: Run Unit Tests
+        run: npm run test:unit
+
+      # --- POSTMAN API TESTS ---
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Postman Tests
+        run: newman run ./tests/postman/collection.json
+
+      # --- PLAYWRIGHT E2E TESTS ---
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright Tests
+        run: npm run test:e2e

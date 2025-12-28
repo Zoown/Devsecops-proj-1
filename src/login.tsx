@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -17,7 +19,8 @@ const Login = () => {
       localStorage.setItem("token", response.data.token); //  Store JWT token
       navigate("/admin"); // Redirect to admin panel after login
     } catch (error) {
-      alert("Invalid credentials, please try again!");
+      //alert("Invalid credentials, please try again!");
+      setError("Invalid credentials, please try again!");
     }
   };
 
@@ -37,6 +40,8 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Login</button>
+      
+      {error && <p className="text-danger">{error}</p>}
     </div>
   );
 };

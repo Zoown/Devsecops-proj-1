@@ -4,28 +4,56 @@ import axios from "axios";
 interface DeleteApartmentProps {
   apartmentId: number;
   apartmentNumber: number;
+  street: string;
+  address: string;
+  size: number;
+  rent: number;
+  city: string;
   onApartmentDeleted: (id: number) => void;
 }
 
-const DeleteApartment: React.FC<DeleteApartmentProps> = ({ apartmentId, apartmentNumber, onApartmentDeleted }) => {
+
+const DeleteApartment: React.FC<DeleteApartmentProps> = ({
+  apartmentId,
+  apartmentNumber,
+  street,
+  address,
+  size,
+  rent,
+  city,
+  onApartmentDeleted
+}) => {
   const handleApartmentDelete = async () => {
     try {
       console.log("Attempting to DELETE apartment with ID:", apartmentId);
       //await axios.delete(`/api/apartments?id=${apartmentId}`);
       await axios.delete(`/api/apartments/${apartmentId}`);
+      console.log("Successfully deleted apartment:", apartmentId);
       onApartmentDeleted(apartmentId); // Remove from UI after successful deletion
-    } catch (error) {
-      console.error("Error deleting apartment:", error);
+    } catch (error: any) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            console.error("Apartment not found");
+            break;
+          case 400:
+            console.error("Invalid apartment ID");
+            break;
+          case 401:
+          case 403:
+            console.error("Not authorized to delete this apartment");
+            break;
+          default:
+            console.error("Server error:", error);
+        }
+      } else {
+        console.error("Network error:", error);
+      }
     }
   };
 
   return (
-    <div className="card shadow-sm mb-3">
-      <div className="card-body d-flex justify-content-between align-items-center">
-        <p className="mb-0 fw-bold">{apartmentNumber}</p>
-        <button className="btn btn-danger" onClick={handleApartmentDelete}>Delete</button>
-      </div>
-    </div>
+    <button className="btn btn-danger" data-testid="delete-button" onClick={handleApartmentDelete}>Delete</button>
   );
 };
 

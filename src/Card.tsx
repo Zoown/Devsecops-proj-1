@@ -25,7 +25,7 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <Link to={link} className="card-link">
-      <div className="card">
+      <div className="card" data-testid="apartment-listing-card">
         <img src={image} alt={title} className="card-img-top fixed-size" />
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
