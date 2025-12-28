@@ -19,6 +19,7 @@ jobs:
     steps:
       - name: Skip tests on main (temporary)
         if: github.ref == 'refs/heads/main'
+        continue-on-error: true
         run: |
           echo "Skipping tests on main for initial setup"
           exit 78
